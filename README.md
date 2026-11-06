@@ -19,37 +19,40 @@
 
 ## 安装
 
-### 前提
+### 方式一：DSH Desktop（推荐）
 
-- 已安装 DeepSeek Harness Desktop，或正在使用 `dsh web`。
-- 能在终端运行 `dsh` 命令。
+DSH Desktop 的 `desktop` profile 由桌面应用独占管理，终端里的 `dsh plugin --profile desktop` 会被拒绝。请用应用内的插件页安装：
 
-### 方式一：从 GitHub 压缩包安装（推荐，不需要 git）
+1. 打开 DSH Desktop，点击左侧栏的 **插件**。
+2. 点击 **添加插件** → **安装第三方插件**。
+3. 在输入框中粘贴下面这个压缩包地址：
+
+   ```text
+   https://github.com/OStarsO/dsh-processing-status/archive/refs/heads/main.tar.gz
+   ```
+
+4. 点 **安装**，完成后按提示 **立即启用**（或稍后在插件列表里启用）。
+5. 重启 DSH Desktop，或刷新页面。
+
+> 插件页也接受本地绝对路径，以及已安装 Git 时的 `github:OStarsO/dsh-processing-status`。
+
+### 方式二：`dsh web` 命令行
+
+`dsh web` 使用的 `web` profile 可以通过 CLI 管理：
 
 ```sh
-dsh plugin --profile desktop add https://github.com/OStarsO/dsh-processing-status/archive/refs/heads/main.tar.gz
+dsh plugin --profile web add https://github.com/OStarsO/dsh-processing-status/archive/refs/heads/main.tar.gz
 ```
 
-- DSH Desktop 的 profile 通常是 `desktop`。
-- 如果是 `dsh web`，把 `desktop` 换成 `web`。
-- 如果使用自定义 profile，换成对应名称。
-- 这条命令让 pnpm 直接下载 GitHub 的源码压缩包，因此本机没有安装 Git 也能用。
+自定义 profile 把 `web` 换成对应名称。压缩包地址不需要本机安装 Git。
 
 安装完成后重启 DSH，或刷新 Web 页面。
-
-### 方式二：使用 git 安装
-
-已经安装 Git 时，也可以使用 GitHub 简写：
-
-```sh
-dsh plugin --profile desktop add github:OStarsO/dsh-processing-status
-```
 
 ### 方式三：克隆到本地后安装
 
 ```sh
 git clone https://github.com/OStarsO/dsh-processing-status.git
-dsh plugin --profile desktop add "C:\path\to\dsh-processing-status"
+dsh plugin --profile web add "C:\path\to\dsh-processing-status"
 ```
 
 把 `C:\path\to\dsh-processing-status` 换成实际目录。这个插件是纯 ESM，不需要构建，也没有运行时依赖。

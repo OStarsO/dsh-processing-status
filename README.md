@@ -24,19 +24,28 @@
 - 已安装 DeepSeek Harness Desktop，或正在使用 `dsh web`。
 - 能在终端运行 `dsh` 命令。
 
-### 方式一：直接从 GitHub 安装（推荐）
+### 方式一：从 GitHub 压缩包安装（推荐，不需要 git）
 
 ```sh
-dsh plugin --profile desktop add github:OStarsO/dsh-processing-status
+dsh plugin --profile desktop add https://github.com/OStarsO/dsh-processing-status/archive/refs/heads/main.tar.gz
 ```
 
 - DSH Desktop 的 profile 通常是 `desktop`。
 - 如果是 `dsh web`，把 `desktop` 换成 `web`。
 - 如果使用自定义 profile，换成对应名称。
+- 这条命令让 pnpm 直接下载 GitHub 的源码压缩包，因此本机没有安装 Git 也能用。
 
 安装完成后重启 DSH，或刷新 Web 页面。
 
-### 方式二：克隆到本地后安装
+### 方式二：使用 git 安装
+
+已经安装 Git 时，也可以使用 GitHub 简写：
+
+```sh
+dsh plugin --profile desktop add github:OStarsO/dsh-processing-status
+```
+
+### 方式三：克隆到本地后安装
 
 ```sh
 git clone https://github.com/OStarsO/dsh-processing-status.git

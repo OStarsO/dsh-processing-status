@@ -6,6 +6,127 @@ window.__ModuleLoader__.load({
     const { useEffect, useRef, useState, useSyncExternalStore } = React
 
     const TIPS = [
+      // 来历（8）
+      'DSH 是 DeepSeek Harness 的缩写',
+      '它的口号是：一切皆插件',
+      '模型、工具、沙箱、连 UI 都是插件',
+      'DSH 的内核是 Cordis',
+      'Cordis 由 Shigma 开发，被 vendor 进了仓库',
+      '有篇论文专门讲 Cordis 的设计',
+      '仓库 star 已经 27 万+',
+      'MIT 开源，但目前只是开发者预览',
+
+      // 启动（10）
+      'npx @deepseek-ai/dsh web 一条命令就能跑',
+      'Web UI 默认在 127.0.0.1:3080',
+      '它默认会顺手帮你打开浏览器',
+      '加 --no-open 就只跑服务，不开窗',
+      'SSH 启动时，它只打印地址',
+      '--port 写在 profile 后面才生效',
+      'dsh 不用全局安装，也不要账号',
+      'headless 模式跑的是一次性任务',
+      '默认工作目录＝你敲命令时所在的地方',
+      '没选工作区之前，输入框是灰的',
+
+      // 三层结构（12）
+      'plugin 做事，bundle 打包，profile 组合',
+      'bundle 靠 package.json 的 dsh.bundle.patch 声明',
+      '忘写这个字段，启动就报 declares no dsh.bundle',
+      'profile 都住在 ~/.dsh/profiles/ 下面',
+      '第一次启动会自动把 profile 建出来',
+      'profile 固定三份文件：package.json、patch、pnpm-workspace',
+      '插件行只有四个字段：id、name、config、disabled',
+      'config 是整体替换，不做深合并',
+      '覆盖按 id 定位，不按行号',
+      '行顺序不代表加载顺序',
+      '加载是「服务到齐就激活」',
+      '配置里能写 !!js 表达式，按平台开关插件',
+
+      // patch 与热更新（10）
+      'patch 一共五层，最后一层是启动器的 flag',
+      '顺序是 bundles → profile → home → --patch → flag',
+      '想让全机生效，就写 ~/.dsh/cordis.patch.yml',
+      'dsh --dump-config 能看到最终合成的配置',
+      '改 cordis.patch.yml，通常不用重启',
+      'HMR 盯的是 patch 文件，不是源码',
+      '改插件代码，还是得重新构建',
+      '热更新前会先悄悄装上 hmr 插件',
+      'dsh plugin 其实是把参数转发给 pnpm',
+      '相对路径按你敲命令时的目录算',
+
+      // 内核机制（12）
+      '一个插件只要导出 name、inject、Config、apply',
+      'inject 是硬依赖：服务不到齐就不启动',
+      'ctx.get 是软依赖：拿不到就返回 undefined',
+      '同名服务在同一作用域重复注册会抛错',
+      'Service 的寿命＝所属 fiber 的寿命',
+      '定时器、监听、watcher 都要过 ctx.effect 记账',
+      '卸载时逆序回收，这就是热插拔的秘密',
+      '配置由 Schemastery 在启动前校验完',
+      '校验是同步的，异步 schema 直接 TypeError',
+      '写了 default，插件就能假设 config 一定良构',
+      'dsh plugin list 能看清都装了什么',
+      '工具、命令、Skill 都只是 ctx.* 上的一行注册',
+
+      // 工具与命令（12）
+      '工具注册时必须声明输出 schema',
+      '工具流水线：pre-execute → guards → 主体 → post',
+      'guard 一旦拒绝，就是最终拒绝',
+      '要声明 isConcurrencySafe 才允许并发',
+      '取消是协作式的，靠 signal 自己让路',
+      '主体开跑前后的取消，报的是两种错误码',
+      '注册在 agent.ctx 的工具，只对这个 agent 可见',
+      '同层工具重名会抛错，跨层则是遮蔽',
+      '命令不经过模型，直接跑 handler',
+      '命令名必须小写字母开头，不带斜杠',
+      '/goal 除了设目标，还能 clear、edit、pause、resume',
+      '已有未完成目标时，再 /goal 会被拒绝',
+
+      // 上下文与压缩（6）
+      'Skill 就是一个 SKILL.md',
+      '系统提示词是插件一段段拼出来的',
+      '插件可以只贡献一段提示词',
+      '改 schema 或提示词，KV Cache 前缀就失效',
+      '/compact 是压缩插件给的命令',
+      '工具结果超过 8192 字符就会被裁剪',
+
+      // 安全（12）
+      '权限预设三档：只读、可写工作区、完全放行',
+      '一档预设同时改沙箱和审批两个维度',
+      'DSH_PERMISSION_MODE 决定模式，默认 workspace-write',
+      '可写工作区的根，默认是 process.cwd()',
+      '审批只有 allow、deny、ask，不能改写输入',
+      '没部署审批时，「询问」会降级成「拒绝」',
+      '完全放行档下，审批策略是 never',
+      '沙箱按平台分家：bash 给 Unix，pwsh 给 Windows',
+      'API key 不进进程环境，走凭据服务解析',
+      '凭据每次调用都重新解析，从不缓存',
+      '空字符串不算秘密，清空要用 unset',
+      '文件读写要走 ctx.fs，用 node:fs 就是绕过沙箱',
+
+      // Agent 与界面（10）
+      '内置四个预设：standard、PTC、minimal、creative',
+      'minimal 只有 bash 和编辑器，专门用来做基准',
+      'PTC 把一轮工具调用写成一段 TypeScript',
+      'preset 住在 config/agent-presets/ 目录下',
+      '每个 preset 两份文件：preset.yml 和 agent.cordis.yml',
+      '要每会话独立实例，就得开 isolate realm',
+      'plan-mode、compaction、delegation 各占一个 realm',
+      'token-meter 故意不开 realm，留在宿主层',
+      '客户端 UI 靠 slot 一层层嵌：section → tab → item',
+      '本插件占两个 slot：输入框上方、设置里的开关',
+
+      // 生态（8）
+      '插件索引靠 GitHub 的 dsh-plugin 话题自动收集',
+      '官方站统计：2900 个插件、2100 位作者',
+      '每周的 npm 下载量是 540 万',
+      '除了官方站，还有 dsh.so 等第三方目录',
+      '给仓库打上 dsh-plugin 话题才容易被收录',
+      '这个插件是纯 ESM，不需要构建',
+      '有插件把 DSH 接进了微信、QQ、飞书',
+      '连「桌面端」本身都是当插件写的',
+
+      // 通用冷知识（100）
       // 身体与感官（12）
       '香蕉是草，不是树',
       '章鱼有三颗心，血是蓝的',
@@ -120,6 +241,7 @@ window.__ModuleLoader__.load({
       '52张牌的顺序比地球上的沙粒还多',
       '一摩尔是6.02×10²³个',
     ]
+
     const TIPS_KEY = 'dsh.processing-status.tips.v1'
     const CLOSED_PREFIX = 'dsh.processing-status.closed.'
     const ROTATE_MS = 5000
